@@ -22,8 +22,8 @@ Novation Launch Control MIDI controller.
 
 == References
 
-* http://www.thomann.de/de/novation_launchpad_mk2.htm[Novation Launchpad MK2]
-* https://novationmusic.de/sites/default/files/novation/downloads/10529/launchpad-mk2-programmers-reference-guide_0.pdf[Launchpad MK2 Programmers Reference Guide]
+* https://novationmusic.de/launch/launch-control[Novation Launch Control]
+* https://d19ulaff0trnck.cloudfront.net/sites/default/files/novation/downloads/6958/launch-control-programmers-reference-guide.pdf[Launch Control Programmers reference guide]
 * http://docs.oracle.com/javase/tutorial/sound/TOC.html[Java Sound Tutorial]
 * http://docs.oracle.com/javase/tutorial/sound/MIDI-messages.html[Transmitting and Receiving MIDI Messages]
 * https://docs.oracle.com/javase/8/docs/api/javax/sound/midi/package-summary.html[javax.sound.midi API]

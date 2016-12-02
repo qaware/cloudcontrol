@@ -1,0 +1,38 @@
+image:https://travis-ci.org/qaware/cloudcontrol.svg?branch=master["Build Status", link="https://travis-ci.org/qaware/cloudcontrol"]
+image:https://badge.waffle.io/qaware/cloudcontrol.png?label=ready&title=Ready["Stories in Ready", link="http://waffle.io/qaware/cloudcontrol"]
+image:https://badge.waffle.io/qaware/cloudcontrol.png?label=in%20progress&title=In%20Progress["Stories in Progress", link="http://waffle.io/qaware/cloudcontrol"]
+image:https://img.shields.io/badge/license-MIT%20License-blue.svg["MIT License", link=https://github.com/qaware/cloudcontrol/blob/master/LICENSE"]
+
+= Cloud Control
+
+Remote control a Kubernetes, Marathon, Vamp.io or Docker Swarm cluster using a
+Novation Launch Control MIDI controller.
+
+== Configuration
+
+
+== Usage
+
+
+== Action Buttons
+
+
+== Labels
+
+
+== References
+
+* http://www.thomann.de/de/novation_launchpad_mk2.htm[Novation Launchpad MK2]
+* https://novationmusic.de/sites/default/files/novation/downloads/10529/launchpad-mk2-programmers-reference-guide_0.pdf[Launchpad MK2 Programmers Reference Guide]
+* http://docs.oracle.com/javase/tutorial/sound/TOC.html[Java Sound Tutorial]
+* http://docs.oracle.com/javase/tutorial/sound/MIDI-messages.html[Transmitting and Receiving MIDI Messages]
+* https://docs.oracle.com/javase/8/docs/api/javax/sound/midi/package-summary.html[javax.sound.midi API]
+
+== Maintainer
+
+M.-Leander Reimer (@lreimer), <mario-leander.reimer@qaware.de>
+
+== License
+
+The software and documentation is provided under the MIT open source license,
+read the `LICENSE` file for details.

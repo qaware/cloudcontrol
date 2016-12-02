@@ -1,0 +1,22 @@
+# IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Maven
+target/
+*.versionsBackup
+
+# Gradle
+.gradletasknamecache
+.gradle/
+build/
+
+!kubernetes/
+!src/main/kotlin/de/qaware/cloud/nativ/kpad/kubernetes/
+kubernetes/*
+kubernetes.tar.gz
+
+# OSX
+*.DS_Store

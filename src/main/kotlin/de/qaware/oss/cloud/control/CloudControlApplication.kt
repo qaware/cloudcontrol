@@ -59,7 +59,7 @@ fun main(args: Array<String>) {
     contextControl.startContext(ApplicationScoped::class.java)
 
     // ensure we shutdown nicely on exit
-    Runtime.getRuntime().addShutdownHook(Thread() {
+    Runtime.getRuntime().addShutdownHook(Thread {
         cdiContainer.shutdown()
     })
 }

@@ -25,7 +25,9 @@
 
 package de.qaware.oss.cloud.control
 
+import de.qaware.oss.cloud.control.midi.MidiDeviceController
 import org.apache.deltaspike.cdise.api.CdiContainerLoader
+import org.apache.deltaspike.core.api.provider.BeanProvider
 import org.slf4j.bridge.SLF4JBridgeHandler
 import javax.enterprise.context.ApplicationScoped
 import javax.enterprise.context.Dependent
@@ -58,8 +60,13 @@ fun main(args: Array<String>) {
     contextControl.startContext(Dependent::class.java)
     contextControl.startContext(ApplicationScoped::class.java)
 
+    // reset any buttons of the MIDI device
+    val controller = BeanProvider.getContextualReference(MidiDeviceController::class.java)
+    controller.resetDevice()
+
     // ensure we shutdown nicely on exit
     Runtime.getRuntime().addShutdownHook(Thread {
+        controller.resetDevice()
         cdiContainer.shutdown()
     })
 }

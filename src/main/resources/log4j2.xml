@@ -6,7 +6,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="de.qaware.oss.cloud.control" level="info" additivity="false">
+        <Logger name="de.qaware.oss.cloud.control" level="debug" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
         <Root level="warn">

@@ -72,8 +72,8 @@ public class LaunchControlDeviceIT {
 
     @Test
     public void testBasicInteraction() throws Exception {
-        System.setProperty("javax.sound.midi.Transmitter", "com.sun.media.sound.MidiInDeviceProvider#Launchpad MK2");
-        System.setProperty("javax.sound.midi.Receiver", "com.sun.media.sound.MidiOutDeviceProvider#Launchpad MK2");
+        System.setProperty("javax.sound.midi.Transmitter", "com.sun.media.sound.MidiInDeviceProvider#Launch Control");
+        System.setProperty("javax.sound.midi.Receiver", "com.sun.media.sound.MidiOutDeviceProvider#Launch Control");
 
         Receiver receiver = MidiSystem.getReceiver();
 
@@ -126,7 +126,7 @@ public class LaunchControlDeviceIT {
         Transmitter transmitter = MidiSystem.getTransmitter();
         transmitter.setReceiver(loggingReceiver());
 
-        // System.in.read();
+        System.in.read();
         receiver.send(new ShortMessage(176, 8, 0, 0), -1);
     }
 

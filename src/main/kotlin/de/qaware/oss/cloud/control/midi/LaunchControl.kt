@@ -43,6 +43,7 @@ open class LaunchControl @Inject constructor(private val transmitter: Transmitte
                                              private val receiver: Receiver,
                                              private val buttonEvent: Event<ButtonEvent>,
                                              private val cursorEvent: Event<CursorEvent>,
+                                             private val knobEvent: Event<KnobEvent>,
                                              private val logger: Logger) {
 
     /**
@@ -64,16 +65,38 @@ open class LaunchControl @Inject constructor(private val transmitter: Transmitte
         logger.debug("Handling MIDI message [{} {} {} {}]",
                 message.channel, message.command, message.data1, message.data2)
 
-        when (message.data1) {
-            in 9..12 -> {
-                val button = Button.find(message.command, message.data1)
-                buttonEvent.select(qualifier(message.data2)).fire(ButtonEvent(message.channel, button))
+        if (message.command == 176) {
+            // these are cursor or knob events
+            when (message.data1) {
+                in 21..28 -> {
+                    knobEvent.fire(KnobEvent(Channel.find(message.channel)!!, 1, message.data1 - 20, message.data2))
+                }
+
+                in 41..48 -> {
+                    knobEvent.fire(KnobEvent(Channel.find(message.channel)!!, 2, message.data1 - 40, message.data2))
+                }
+
+                in 114..117 -> {
+                    val cursor = Cursor.find(message.command, message.data1)
+                    cursorEvent.select(qualifier(message.data2)).fire(CursorEvent(Channel.find(message.channel)!!, cursor!!))
+                }
             }
-            in 114..117 -> {
-                val cursor = Cursor.find(message.command, message.data1)
-                cursorEvent.select(qualifier(message.data2)).fire(CursorEvent(message.channel, cursor))
+        } else {
+            // these are button press or release commands
+            when (message.data1) {
+                in 9..12 -> {
+                    val button = Button.find(message.command, message.data1)
+                    buttonEvent.select(qualifier(message.data2)).fire(ButtonEvent(Channel.find(message.channel)!!, button!!))
+                }
+
+                in 25..28 -> {
+                    val button = Button.find(message.command, message.data1)
+                    buttonEvent.select(qualifier(message.data2)).fire(ButtonEvent(Channel.find(message.channel)!!, button!!))
+                }
             }
         }
+
+
     }
 
     private fun qualifier(data2: Int): Annotation {
@@ -89,8 +112,8 @@ open class LaunchControl @Inject constructor(private val transmitter: Transmitte
         receiver.send(ShortMessage(176, 8, 0, 0), -1)
     }
 
-    open fun color(channel: Int, switchable: Switchable, color: Color) {
-        receiver.send(ShortMessage(switchable.command, channel, switchable.value, color.value), -1)
+    open fun color(channel: Channel, switchable: Switchable, color: Color) {
+        receiver.send(ShortMessage(switchable.command, channel.value, switchable.value, color.value), -1)
     }
 
     /**
@@ -138,9 +161,26 @@ open class LaunchControl @Inject constructor(private val transmitter: Transmitte
              *
              * @param command the command
              * @param value the value
-             * @return the Cursor if found
+             * @return the Button if found
              */
             fun find(command: Int, value: Int) = Button.values().find { it.command == command && it.value == value }
+        }
+    }
+
+    /**
+     * Enum class for the two supported channels.
+     */
+    enum class Channel(val value: Int) {
+        USER(0), FACTORY(8);
+
+        companion object {
+            /**
+             * Finds the Channel by the given value.
+             *
+             * @param value the value
+             * @return the Channel if found
+             */
+            fun find(value: Int) = Channel.values().find { it.value == value }
         }
     }
 

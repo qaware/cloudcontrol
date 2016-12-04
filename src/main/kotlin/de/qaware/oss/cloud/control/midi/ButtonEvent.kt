@@ -26,4 +26,4 @@ package de.qaware.oss.cloud.control.midi
 /**
  * The event data class for Cursor events.
  */
-data class ButtonEvent(val channel: Int, val cursor: LaunchControl.Button?)
+data class ButtonEvent(val channel: LaunchControl.Channel, val cursor: LaunchControl.Button)

@@ -24,8 +24,7 @@
 
 package de.qaware.oss.cloud.control.midi
 
-import de.qaware.oss.cloud.control.midi.LaunchControl.Color
-import de.qaware.oss.cloud.control.midi.LaunchControl.Cursor
+import de.qaware.oss.cloud.control.midi.LaunchControl.*
 
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
@@ -43,15 +42,15 @@ open class MidiDeviceController @Inject constructor(private val launchControl: L
     open fun initDevice() {
         launchControl.resetLEDs()
 
-        launchControl.color(0, Cursor.UP, Color.RED_LOW)
-        launchControl.color(0, Cursor.DOWN, Color.RED_LOW)
-        launchControl.color(0, Cursor.LEFT, Color.RED_LOW)
-        launchControl.color(0, Cursor.RIGHT, Color.RED_LOW)
+        launchControl.color(Channel.USER, Cursor.UP, Color.RED_LOW)
+        launchControl.color(Channel.USER, Cursor.DOWN, Color.RED_LOW)
+        launchControl.color(Channel.USER, Cursor.LEFT, Color.RED_LOW)
+        launchControl.color(Channel.USER, Cursor.RIGHT, Color.RED_LOW)
 
-        launchControl.color(8, Cursor.UP, Color.RED_LOW)
-        launchControl.color(8, Cursor.DOWN, Color.RED_LOW)
-        launchControl.color(8, Cursor.LEFT, Color.RED_LOW)
-        launchControl.color(8, Cursor.RIGHT, Color.RED_LOW)
+        launchControl.color(Channel.FACTORY, Cursor.UP, Color.RED_LOW)
+        launchControl.color(Channel.FACTORY, Cursor.DOWN, Color.RED_LOW)
+        launchControl.color(Channel.FACTORY, Cursor.LEFT, Color.RED_LOW)
+        launchControl.color(Channel.FACTORY, Cursor.RIGHT, Color.RED_LOW)
     }
 
     @PreDestroy
@@ -60,11 +59,11 @@ open class MidiDeviceController @Inject constructor(private val launchControl: L
     }
 
     open fun onCursorPressed(@Observes @Pressed event: CursorEvent) {
-        launchControl.color(event.channel, event.cursor!!, Color.RED_FULL)
+        launchControl.color(event.channel, event.cursor, Color.RED_FULL)
     }
 
     open fun onCursorReleased(@Observes @Released event: CursorEvent) {
-        launchControl.color(event.channel, event.cursor!!, Color.RED_LOW)
+        launchControl.color(event.channel, event.cursor, Color.RED_LOW)
     }
 
     open fun onButtonPressed(@Observes @Pressed event: ButtonEvent) {
@@ -72,6 +71,10 @@ open class MidiDeviceController @Inject constructor(private val launchControl: L
     }
 
     open fun onButtonReleased(@Observes @Pressed event: ButtonEvent) {
+        // TODO do something with this event
+    }
+
+    open fun onKnobTurned(@Observes event: KnobEvent) {
         // TODO do something with this event
     }
 }

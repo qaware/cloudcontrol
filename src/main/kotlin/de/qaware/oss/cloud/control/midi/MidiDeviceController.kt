@@ -24,6 +24,9 @@
 
 package de.qaware.oss.cloud.control.midi
 
+import de.qaware.oss.cloud.control.midi.LaunchControl.Color
+import de.qaware.oss.cloud.control.midi.LaunchControl.Cursor
+
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 import javax.enterprise.context.ApplicationScoped
@@ -37,17 +40,38 @@ import javax.inject.Inject
 open class MidiDeviceController @Inject constructor(private val launchControl: LaunchControl) {
 
     @PostConstruct
+    open fun initDevice() {
+        launchControl.resetLEDs()
+
+        launchControl.color(0, Cursor.UP, Color.RED_LOW)
+        launchControl.color(0, Cursor.DOWN, Color.RED_LOW)
+        launchControl.color(0, Cursor.LEFT, Color.RED_LOW)
+        launchControl.color(0, Cursor.RIGHT, Color.RED_LOW)
+
+        launchControl.color(8, Cursor.UP, Color.RED_LOW)
+        launchControl.color(8, Cursor.DOWN, Color.RED_LOW)
+        launchControl.color(8, Cursor.LEFT, Color.RED_LOW)
+        launchControl.color(8, Cursor.RIGHT, Color.RED_LOW)
+    }
+
     @PreDestroy
-    open fun resetDevice() {
+    open fun shutdownDevice() {
         launchControl.resetLEDs()
     }
 
     open fun onCursorPressed(@Observes @Pressed event: CursorEvent) {
-        launchControl.color(event.channel, event.cursor!!, LaunchControl.Color.RED_FULL)
+        launchControl.color(event.channel, event.cursor!!, Color.RED_FULL)
     }
 
     open fun onCursorReleased(@Observes @Released event: CursorEvent) {
-        launchControl.color(event.channel, event.cursor!!, LaunchControl.Color.OFF)
+        launchControl.color(event.channel, event.cursor!!, Color.RED_LOW)
     }
 
+    open fun onButtonPressed(@Observes @Pressed event: ButtonEvent) {
+        // TODO do something with this event
+    }
+
+    open fun onButtonReleased(@Observes @Pressed event: ButtonEvent) {
+        // TODO do something with this event
+    }
 }

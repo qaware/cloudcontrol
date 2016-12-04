@@ -62,11 +62,11 @@ fun main(args: Array<String>) {
 
     // reset any buttons of the MIDI device
     val controller = BeanProvider.getContextualReference(MidiDeviceController::class.java)
-    controller.resetDevice()
+    controller.initDevice()
 
     // ensure we shutdown nicely on exit
     Runtime.getRuntime().addShutdownHook(Thread {
-        controller.resetDevice()
+        controller.shutdownDevice()
         cdiContainer.shutdown()
     })
 }

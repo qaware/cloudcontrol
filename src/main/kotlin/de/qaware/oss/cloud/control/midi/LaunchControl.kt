@@ -41,6 +41,7 @@ import javax.sound.midi.Transmitter
 @ApplicationScoped
 open class LaunchControl @Inject constructor(private val transmitter: Transmitter,
                                              private val receiver: Receiver,
+                                             private val buttonEvent: Event<ButtonEvent>,
                                              private val cursorEvent: Event<CursorEvent>,
                                              private val logger: Logger) {
 
@@ -48,7 +49,7 @@ open class LaunchControl @Inject constructor(private val transmitter: Transmitte
      * Register with the Launchpad to receive MIDI messages.
      */
     @PostConstruct
-    open fun postConstruct() {
+    open fun register() {
         transmitter.receiver = object : Receiver {
             override fun send(message: MidiMessage, timeStamp: Long) {
                 if (message is ShortMessage) handle(message)
@@ -64,6 +65,10 @@ open class LaunchControl @Inject constructor(private val transmitter: Transmitte
                 message.channel, message.command, message.data1, message.data2)
 
         when (message.data1) {
+            in 9..12 -> {
+                val button = Button.find(message.command, message.data1)
+                buttonEvent.select(qualifier(message.data2)).fire(ButtonEvent(message.channel, button))
+            }
             in 114..117 -> {
                 val cursor = Cursor.find(message.command, message.data1)
                 cursorEvent.select(qualifier(message.data2)).fire(CursorEvent(message.channel, cursor))
@@ -84,14 +89,22 @@ open class LaunchControl @Inject constructor(private val transmitter: Transmitte
         receiver.send(ShortMessage(176, 8, 0, 0), -1)
     }
 
-    open fun color(channel: Int, cursor: Cursor, color: Color) {
-        receiver.send(ShortMessage(cursor.command, channel, cursor.value, color.value), -1)
+    open fun color(channel: Int, switchable: Switchable, color: Color) {
+        receiver.send(ShortMessage(switchable.command, channel, switchable.value, color.value), -1)
+    }
+
+    /**
+     * Common interface for all switchable buttons on the device.
+     */
+    interface Switchable {
+        val command: Int
+        val value: Int
     }
 
     /**
      * Enum class for the 4 cursor buttons.
      */
-    enum class Cursor(val command: Int, val value: Int) {
+    enum class Cursor(override val command: Int, override val value: Int) : Switchable {
         UP(176, 114), DOWN(176, 115), LEFT(176, 116), RIGHT(176, 117);
 
         companion object {
@@ -109,7 +122,7 @@ open class LaunchControl @Inject constructor(private val transmitter: Transmitte
     /**
      * Enum class for the 8 press buttons.
      */
-    enum class Button(val command: Int, val value: Int) {
+    enum class Button(override val command: Int, override val value: Int) : Switchable {
         BUTTON_1(144, 9),
         BUTTON_2(144, 10),
         BUTTON_3(144, 11),
@@ -117,7 +130,18 @@ open class LaunchControl @Inject constructor(private val transmitter: Transmitte
         BUTTON_5(144, 25),
         BUTTON_6(144, 26),
         BUTTON_7(144, 27),
-        BUTTON_8(144, 28),
+        BUTTON_8(144, 28);
+
+        companion object {
+            /**
+             * Finds the Button by the given command and value.
+             *
+             * @param command the command
+             * @param value the value
+             * @return the Cursor if found
+             */
+            fun find(command: Int, value: Int) = Button.values().find { it.command == command && it.value == value }
+        }
     }
 
     /**

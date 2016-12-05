@@ -45,10 +45,10 @@ fun main(args: Array<String>) {
     System.setProperty("javax.sound.midi.Receiver", "com.sun.media.sound.MidiOutDeviceProvider#Launch Control")
 
     // get cluster service property or initialize default
-    var orchestrator = System.getProperty("cloud.orchestrator")
+    var orchestrator = System.getProperty("cluster.orchestrator")
     if (orchestrator == null) {
         orchestrator = "kubernetes"
-        System.setProperty("cloud.orchestrator", orchestrator)
+        System.setProperty("cluster.orchestrator", orchestrator)
     }
 
     // get the current CDI container

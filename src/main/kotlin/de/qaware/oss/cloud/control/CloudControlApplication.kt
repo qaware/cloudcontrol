@@ -48,7 +48,7 @@ fun main(args: Array<String>) {
     var orchestrator = System.getProperty("cloud.orchestrator")
     if (orchestrator == null) {
         orchestrator = "kubernetes"
-        System.setProperty("cluster.orchestrator", orchestrator)
+        System.setProperty("cloud.orchestrator", orchestrator)
     }
 
     // get the current CDI container

@@ -151,7 +151,8 @@ open class KubernetesCluster @Inject constructor(private val client: KubernetesC
         if (deployments[index] == null) return
 
         val name = KubernetesHelper.getName(deployments[index])
-        val replicas = event.value
+        // maybe make the factor configurable later
+        val replicas = event.value * .1
 
         synchronized(client) {
             deployments[index] = client.extensions().deployments()
@@ -159,7 +160,7 @@ open class KubernetesCluster @Inject constructor(private val client: KubernetesC
                     .withName(name)
                     .edit()
                     .editSpec()
-                    .withReplicas(replicas)
+                    .withReplicas(replicas.toInt())
                     .endSpec()
                     .done()
         }

@@ -26,4 +26,4 @@ package de.qaware.oss.cloud.control.midi
 /**
  * The event data class for Knob events.
  */
-data class KnobEvent(val channel: LaunchControl.Channel, val row: Int, val number: Int, val value: Int)
+data class KnobEvent(val channel: LaunchControl.Channel, val row: Int, val index: Int, val value: Int)

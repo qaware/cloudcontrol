@@ -67,33 +67,26 @@ open class LaunchControl @Inject constructor(private val transmitter: Transmitte
 
         if (message.command == 176) {
             // these are cursor or knob events
+            val channel = Channel.findByValue(message.channel)
             when (message.data1) {
                 in 21..28 -> {
-                    knobEvent.fire(KnobEvent(Channel.find(message.channel)!!, 1, message.data1 - 20, message.data2))
+                    knobEvent.fire(KnobEvent(channel!!, 1, message.data1 - 21, message.data2))
                 }
 
                 in 41..48 -> {
-                    knobEvent.fire(KnobEvent(Channel.find(message.channel)!!, 2, message.data1 - 40, message.data2))
+                    knobEvent.fire(KnobEvent(channel!!, 2, message.data1 - 41, message.data2))
                 }
 
                 in 114..117 -> {
-                    val cursor = Cursor.find(message.command, message.data1)
-                    cursorEvent.select(qualifier(message.data2)).fire(CursorEvent(Channel.find(message.channel)!!, cursor!!))
+                    val cursor = Cursor.findBy(message.command, message.data1)
+                    cursorEvent.select(qualifier(message.data2)).fire(CursorEvent(channel!!, cursor!!))
                 }
             }
         } else {
             // these are button press or release commands
-            when (message.data1) {
-                in 9..12 -> {
-                    val button = Button.find(message.command, message.data1)
-                    buttonEvent.select(qualifier(message.data2)).fire(ButtonEvent(Channel.find(message.channel)!!, button!!))
-                }
-
-                in 25..28 -> {
-                    val button = Button.find(message.command, message.data1)
-                    buttonEvent.select(qualifier(message.data2)).fire(ButtonEvent(Channel.find(message.channel)!!, button!!))
-                }
-            }
+            val button = Button.findByValue(message.command, message.data1)
+            val channel = Channel.findByValue(message.channel)
+            buttonEvent.select(qualifier(message.data2)).fire(ButtonEvent(channel!!, button!!))
         }
 
 
@@ -138,7 +131,7 @@ open class LaunchControl @Inject constructor(private val transmitter: Transmitte
              * @param value the value
              * @return the Cursor if found
              */
-            fun find(command: Int, value: Int) = values().find { it.command == command && it.value == value }
+            fun findBy(command: Int, value: Int) = values().find { it.command == command && it.value == value }
         }
     }
 
@@ -163,7 +156,29 @@ open class LaunchControl @Inject constructor(private val transmitter: Transmitte
              * @param value the value
              * @return the Button if found
              */
-            fun find(command: Int, value: Int) = Button.values().find { it.command == command && it.value == value }
+            fun findByValue(command: Int, value: Int) = Button.values().find { it.command == command && it.value == value }
+
+            /**
+             * Finds the Button by the given number.
+             *
+             * @param number the number to find
+             * @return the Button if found
+             */
+            fun findByNumber(number: Int) = Button.values().find { it.name.endsWith(number.toChar()) }
+
+            /**
+             * Finds a Button based on the give index over two banks.
+             *
+             * @param index the index
+             * @return the found Button
+             */
+            fun findByIndex(index: Int): Button? {
+                when (index) {
+                    in 0..7 -> return Button.values()[index]
+                    in 8..15 -> return Button.values()[index - 8]
+                    else -> return null
+                }
+            }
         }
     }
 
@@ -180,7 +195,23 @@ open class LaunchControl @Inject constructor(private val transmitter: Transmitte
              * @param value the value
              * @return the Channel if found
              */
-            fun find(value: Int) = Channel.values().find { it.value == value }
+            fun findByValue(value: Int) = Channel.values().find { it.value == value }
+
+            /**
+             * Finds the Channel by the given button index. The Factory channel
+             * is the default so 1-8 (index 0..7) is here. The other 8 slots are
+             * on the User channel.
+             *
+             * @param index the index
+             * @return the Channel if found
+             */
+            fun findByIndex(index: Int): Channel? {
+                when (index) {
+                    in 0..7 -> return FACTORY
+                    in 8..15 -> return USER
+                    else -> return null
+                }
+            }
         }
     }
 

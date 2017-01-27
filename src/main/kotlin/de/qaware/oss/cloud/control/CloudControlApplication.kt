@@ -37,25 +37,14 @@ import javax.enterprise.context.Dependent
  * initializes the MIDI environment and device properly.
  */
 fun main(args: Array<String>) {
-    SLF4JBridgeHandler.removeHandlersForRootLogger()
-    SLF4JBridgeHandler.install()
-
-    // this seems to be required at least under Windows
-    System.setProperty("javax.sound.midi.Transmitter", "com.sun.media.sound.MidiInDeviceProvider#Launch Control")
-    System.setProperty("javax.sound.midi.Receiver", "com.sun.media.sound.MidiOutDeviceProvider#Launch Control")
-
-    // get cluster service property or initialize default
-    var orchestrator = System.getProperty("cluster.orchestrator")
-    if (orchestrator == null) {
-        orchestrator = "kubernetes"
-        System.setProperty("cluster.orchestrator", orchestrator)
-    }
+    initSLF4J()
+    setSystemProperties()
 
     // get the current CDI container
     val cdiContainer = CdiContainerLoader.getCdiContainer()
     cdiContainer.boot()
 
-    // and initialize the CDI container control
+    // and setSystemProperties the CDI container control
     val contextControl = cdiContainer.contextControl;
     contextControl.startContext(Dependent::class.java)
     contextControl.startContext(ApplicationScoped::class.java)
@@ -64,9 +53,31 @@ fun main(args: Array<String>) {
     val controller = BeanProvider.getContextualReference(MidiDeviceController::class.java)
     controller.initDevice()
 
+    // and setSystemProperties the cluster orchestrator
+    val orchestrator = BeanProvider.getContextualReference(ClusterOrchestrator::class.java)
+    orchestrator.display()
+
     // ensure we shutdown nicely on exit
     Runtime.getRuntime().addShutdownHook(Thread {
         controller.shutdownDevice()
         cdiContainer.shutdown()
     })
+}
+
+private fun initSLF4J() {
+    SLF4JBridgeHandler.removeHandlersForRootLogger()
+    SLF4JBridgeHandler.install()
+}
+
+private fun setSystemProperties() {
+    // this seems to be required at least under Windows
+    System.setProperty("javax.sound.midi.Transmitter", "com.sun.media.sound.MidiInDeviceProvider#Launch Control")
+    System.setProperty("javax.sound.midi.Receiver", "com.sun.media.sound.MidiOutDeviceProvider#Launch Control")
+
+    // get cluster service property or setSystemProperties default
+    var orchestrator = System.getProperty("cluster.orchestrator")
+    if (orchestrator == null) {
+        orchestrator = "kubernetes"
+        System.setProperty("cluster.orchestrator", orchestrator)
+    }
 }

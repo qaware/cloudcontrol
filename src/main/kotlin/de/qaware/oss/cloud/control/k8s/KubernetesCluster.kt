@@ -24,6 +24,7 @@
 package de.qaware.oss.cloud.control.k8s
 
 import de.qaware.oss.cloud.control.CloudControlLabels
+import de.qaware.oss.cloud.control.ClusterOrchestrator
 import de.qaware.oss.cloud.control.midi.KnobEvent
 import de.qaware.oss.cloud.control.midi.LaunchControl.Channel
 import de.qaware.oss.cloud.control.midi.MidiDeviceController
@@ -51,7 +52,16 @@ open class KubernetesCluster @Inject constructor(private val client: KubernetesC
                                                  @ConfigProperty(name = "kubernetes.namespace")
                                                  private val namespace: String,
                                                  private val deviceController: MidiDeviceController,
-                                                 private val logger: Logger) : Watcher<Deployment> {
+                                                 private val logger: Logger) : Watcher<Deployment>, ClusterOrchestrator {
+    override fun name(): String {
+        return "Kubernetes"
+    }
+
+    override fun display() {
+        deployments.filterNotNull().forEach {
+            logger.info("Deployment(${it.metadata.name}, ${it.metadata.labels})")
+        }
+    }
 
     private val deployments = Array<Deployment?>(16, { i -> null })
 

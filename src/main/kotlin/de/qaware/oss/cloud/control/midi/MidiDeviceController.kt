@@ -25,6 +25,7 @@
 package de.qaware.oss.cloud.control.midi
 
 import de.qaware.oss.cloud.control.midi.LaunchControl.*
+import org.slf4j.Logger
 
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
@@ -36,7 +37,8 @@ import javax.inject.Inject
  * The controller takes care of reacting to MIDI device events properly.
  */
 @ApplicationScoped
-open class MidiDeviceController @Inject constructor(private val launchControl: LaunchControl) {
+open class MidiDeviceController @Inject constructor(private val launchControl: LaunchControl,
+                                                    private val logger: Logger) {
 
     @PostConstruct
     open fun initDevice() {
@@ -75,6 +77,7 @@ open class MidiDeviceController @Inject constructor(private val launchControl: L
     }
 
     open fun onKnobTurned(@Observes event: KnobEvent) {
+        logger.info("Received $event")
         if (event.value == 0) {
             launchControl.color(event.channel, Button.findByNumber(event.index)!!, Color.AMBER_FULL)
         } else {

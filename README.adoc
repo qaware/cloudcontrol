@@ -8,17 +8,66 @@ image:https://img.shields.io/badge/license-MIT%20License-blue.svg["MIT License",
 Remote control a Kubernetes, Marathon, Vamp.io or Docker Swarm cluster using a
 Novation Launch Control MIDI controller.
 
+== Usage
+
+Using the Cloud Control device is easy. First, connect the device via USB with you machine.
+Neither Windows nor Mac need an USB driver for it.
+
+If you use the precompiled binaries, simply
+extract the ZIP archive and execute `bin/cloudcontrol`.
+
+If you want to run from source, you have to compile everything first and then run using Gradle.
+```bash
+$ ./gradlew build
+$ ./gradlew run
+```
+
 == Configuration
 
+[cols="1,1,2", options="header"]
+|===
+| Name
+| Default Value
+| Description
 
-== Usage
+| cluster.orchestrator
+| kubernetes
+| Determines the Orchestrator to use. Currently only `kubernetes` is supported.
+
+| kubernetes.namespace
+| default
+| The Kubernetes namespace to scan for deployments.
+|===
 
 
 == Action Buttons
 
+Currently only the knobs of the top row can be used to scale a deployment
+up or down. Simply turn it in the desired direction. If you scale a deployment to
+zero, the button will turn yellow. Otherwise the button is green.
 
 == Labels
 
+To use the CloudControl device with you deployments you need to use labels to
+configure things such as the location and color on the device. The following
+labels are supported.
+
+[cols="1,1,2", options="header"]
+|===
+| Name
+| Values
+| Description
+
+| cloudcontrol.enabled
+| `true` or `false`
+| Is this deployment controlled by the device.
+If `false` the deployment will be ignored.
+
+| cloudcontrol.index
+| 0..15
+| The index of the deployment on the CloudControl device.
+Index 0..7 is on the Factory bank, index 8..15 on the User bank.
+|===
 
 == References
 

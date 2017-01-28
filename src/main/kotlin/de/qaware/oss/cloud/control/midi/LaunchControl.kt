@@ -164,7 +164,7 @@ open class LaunchControl @Inject constructor(private val transmitter: Transmitte
              * @param number the number to find
              * @return the Button if found
              */
-            fun findByNumber(number: Int) = Button.values().find { it.name.endsWith(number.toChar()) }
+            fun findByNumber(number: Int) = Button.values().find { it.name.endsWith("_$number") }
 
             /**
              * Finds a Button based on the give index over two banks.

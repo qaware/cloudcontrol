@@ -22,7 +22,7 @@ deploy:
   provider: releases
   api_key:
     secure: G0YuvgjzluwMAMzG+QbvGlq4GVfauad9CCF/PHQn7R2GD3CpKjxPLSsbGOixyNFu/kGe/tp/Nm87IsPX9NbWZjruCK/90XIWs8z9uMehvNGp9nZs5+cjJAEC9bD3H+sobBGru2EZXUnHwUIqOAJa6rumJfGW9rG3GTyAh70QlJwHDMHQeNPjaO8cV4n5FaOY1OgNgne7xH0teF3Ec3eZbVQ8mB6CRbxyAanCRz2K2oWjEP8h2ITqiXZDqjAqcCCWhELwtkY/2ZBexorFgHhVCdmvyGot/YEY1bbjXQI1Wn6JU6rWCdAcQdrSXES51zBkc+OA5XsVHsivqTOPyJlW6nUQ9H/BlHiS6jJqYmKA8s3gbhHq50JdlP7UvSRqf2xdPjffA0lvlvdpWIysgXY7HgdUpy7WNI4YCA5aAToxftd3OqQgDHeS0HvSj1i1+Qh/EK63DK6zElUQc7bhlCGF/a9STpI87z1HXSEmbc06/IjZ/8ebYNBYWehqcmt4NtTzyXo2YDOUsgnkGq0323rvxn8ooYBA3NutH5ZSr5eKdySJI/jT6zzAou7mKzvuIOPCSCiDrh4hHFWLF/bbD5kU+T8ylA7GWUCGAwktNaAVJbZZrGl/4R3TeKMAS91WcXTwbtKdRh8HH7oEHA8MlSKc9dsUAZvD803Rn7aD4hN/jOs=
-  file: ./build/distributions/cloudcontrol-1.0.0.zip
+  file: ./build/distributions/cloudcontrol-1.0.1.zip
   skip_cleanup: true
   on:
     tags: true

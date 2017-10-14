@@ -46,7 +46,7 @@ license {
 }
 
 group = 'de.qaware.oss.cloud'
-version = '1.0.0'
+version = '1.0.1'
 
 mainClassName = 'de.qaware.oss.cloud.control.CloudControlApplication'
 

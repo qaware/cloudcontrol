@@ -25,6 +25,7 @@
 package de.qaware.oss.cloud.control.midi
 
 import de.qaware.oss.cloud.control.midi.LaunchControl.*
+import org.apache.deltaspike.core.api.config.ConfigProperty
 import org.slf4j.Logger
 
 import javax.annotation.PostConstruct
@@ -38,6 +39,8 @@ import javax.inject.Inject
  */
 @ApplicationScoped
 open class MidiDeviceController @Inject constructor(private val launchControl: LaunchControl,
+                                                    @ConfigProperty(name = "cloudcontrol.factor")
+                                                    private val factor: Int,
                                                     private val logger: Logger) {
 
     @PostConstruct
@@ -78,7 +81,7 @@ open class MidiDeviceController @Inject constructor(private val launchControl: L
 
     open fun onKnobTurned(@Observes event: KnobEvent) {
         logger.info("Received $event")
-        if (event.value == 0) {
+        if (event.value < factor) {
             launchControl.color(event.channel, Button.findByIndex(event.index)!!, Color.AMBER_FULL)
         } else {
             launchControl.color(event.channel, Button.findByIndex(event.index)!!, Color.GREEN_FULL)

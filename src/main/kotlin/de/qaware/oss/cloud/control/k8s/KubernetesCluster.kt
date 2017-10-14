@@ -51,6 +51,8 @@ import javax.inject.Inject
 open class KubernetesCluster @Inject constructor(private val client: KubernetesClient,
                                                  @ConfigProperty(name = "kubernetes.namespace")
                                                  private val namespace: String,
+                                                 @ConfigProperty(name = "cloudcontrol.factor")
+                                                 private val factor: Int,
                                                  private val deviceController: MidiDeviceController,
                                                  private val logger: Logger) : Watcher<Deployment>, ClusterOrchestrator {
     override fun name(): String {
@@ -162,7 +164,7 @@ open class KubernetesCluster @Inject constructor(private val client: KubernetesC
 
         val name = KubernetesHelper.getName(deployments[index])
         // maybe make the factor configurable later
-        val replicas = event.value * .1
+        val replicas = (event.value / factor) + 1
 
         synchronized(client) {
             deployments[index] = client.extensions().deployments()
@@ -170,7 +172,7 @@ open class KubernetesCluster @Inject constructor(private val client: KubernetesC
                     .withName(name)
                     .edit()
                     .editSpec()
-                    .withReplicas(replicas.toInt())
+                    .withReplicas(replicas)
                     .endSpec()
                     .done()
         }

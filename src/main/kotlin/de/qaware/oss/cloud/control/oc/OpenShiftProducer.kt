@@ -38,16 +38,16 @@ import javax.inject.Inject
  */
 @ApplicationScoped
 open class OpenShiftProducer @Inject constructor(@ConfigProperty(name = "openshift.url")
-                                                 private val master: String?) {
+                                                 private val openshiftUrl: String?) {
 
     @Produces
     @Default
     open fun openShiftClient(): OpenShiftClient {
         System.setProperty(OpenShiftConfig.KUBERNETES_TRUST_CERT_SYSTEM_PROPERTY, "true")
-        if (!master.isNullOrBlank()) {
+        if (!openshiftUrl.isNullOrBlank()) {
             // only set the master if specified
-            System.setProperty(OpenShiftConfig.KUBERNETES_MASTER_SYSTEM_PROPERTY, master)
-            System.setProperty(OpenShiftConfig.OPENSHIFT_URL_SYTEM_PROPERTY, master)
+            System.setProperty(OpenShiftConfig.KUBERNETES_MASTER_SYSTEM_PROPERTY, openshiftUrl)
+            System.setProperty(OpenShiftConfig.OPENSHIFT_URL_SYTEM_PROPERTY, openshiftUrl)
         }
 
         val config = OpenShiftConfigBuilder(false).build()

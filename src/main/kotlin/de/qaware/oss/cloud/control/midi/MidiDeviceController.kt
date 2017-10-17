@@ -81,6 +81,10 @@ open class MidiDeviceController @Inject constructor(private val launchControl: L
 
     open fun onKnobTurned(@Observes event: KnobEvent) {
         logger.info("Received $event")
+        if (event.row != 1) {
+            return
+        }
+
         if (event.value < factor) {
             launchControl.color(event.channel, Button.findByIndex(event.index)!!, Color.AMBER_FULL)
         } else {

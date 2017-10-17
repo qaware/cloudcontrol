@@ -108,7 +108,7 @@ open class OpenShiftCluster @Inject constructor(private val client: OpenShiftCli
     private fun add(deployment: DeploymentConfig) {
         val (index, name) = find(deployment, true)
 
-        logger.info("Adding K8s deployment {} at index {}.", name, index)
+        logger.info("Adding OpenShift DeploymentConfig {} at index {}.", name, index)
         deployments[index] = deployment
         display(index, deployment)
     }
@@ -117,7 +117,7 @@ open class OpenShiftCluster @Inject constructor(private val client: OpenShiftCli
         val (index, name) = find(deployment)
 
         if (index > -1) {
-            logger.info("Modifying K8s deployment {} at index {}.", name, index)
+            logger.info("Modifying OpenShift DeploymentConfig {} at index {}.", name, index)
             deployments[index] = deployment
             display(index, deployment)
         }
@@ -127,7 +127,7 @@ open class OpenShiftCluster @Inject constructor(private val client: OpenShiftCli
         val (index, name) = find(deployment)
 
         if (index > -1) {
-            logger.info("Removing K8s deployment {} at index {}.", name, index)
+            logger.info("Removing OpenShift DeploymentConfig {} at index {}.", name, index)
             deployments[index] = null
             deviceController.off(index)
         }
@@ -137,7 +137,7 @@ open class OpenShiftCluster @Inject constructor(private val client: OpenShiftCli
         val (index, name) = find(deployment)
 
         if (index > -1) {
-            logger.info("Error K8s deployment {} at index {}.", name, index)
+            logger.info("Error OpenShift DeploymentConfig {} at index {}.", name, index)
             deployments[index] = null
             deviceController.failure(index)
         }
@@ -163,6 +163,8 @@ open class OpenShiftCluster @Inject constructor(private val client: OpenShiftCli
         val name = KubernetesHelper.getName(deployments[index])
         // maybe make the factor configurable later
         val replicas = (event.value / factor) + 1
+
+        logger.info("Scaling DeploymentConfig {} to {} replicas.", name, replicas)
 
         synchronized(client) {
             deployments[index] = client.deploymentConfigs()

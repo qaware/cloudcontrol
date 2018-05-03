@@ -86,7 +86,9 @@ open class LaunchControl @Inject constructor(private val transmitter: Transmitte
             // these are button press or release commands
             val button = Button.findByValue(message.command, message.data1)
             val channel = Channel.findByValue(message.channel)
-            buttonEvent.select(qualifier(message.data2)).fire(ButtonEvent(channel!!, button!!))
+            if (button != null && channel != null) {
+                buttonEvent.select(qualifier(message.data2)).fire(ButtonEvent(channel, button))
+            }
         }
 
 

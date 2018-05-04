@@ -1,6 +1,4 @@
 image:https://travis-ci.org/qaware/cloudcontrol.svg?branch=master["Build Status", link="https://travis-ci.org/qaware/cloudcontrol"]
-image:https://badge.waffle.io/qaware/cloudcontrol.png?label=ready&title=Ready["Stories in Ready", link="http://waffle.io/qaware/cloudcontrol"]
-image:https://badge.waffle.io/qaware/cloudcontrol.png?label=in%20progress&title=In%20Progress["Stories in Progress", link="http://waffle.io/qaware/cloudcontrol"]
 image:https://img.shields.io/badge/license-MIT%20License-blue.svg["MIT License", link=https://github.com/qaware/cloudcontrol/blob/master/LICENSE"]
 
 = Cloud Control
